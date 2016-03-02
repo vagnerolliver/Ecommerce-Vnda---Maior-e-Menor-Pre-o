@@ -1,0 +1,22 @@
+{% variants product_id: product.id %}
+  {% if product.on_sale %}
+    {% assign price = product | apply_discount, variant.price %}
+  {% else %}
+    {% assign price = variant.price %}
+  {% endif %}
+
+  {% if forloop.first %}
+    {% assign min_price = price %}
+    {% assign max_price = price %}
+  {% else %}
+    {% if price < min_price %}{% assign min_price = price %}{% endif %}
+    {% if price > max_price %}{% assign max_price = price %}{% endif %}
+  {% endif %}
+{% endvariants %}
+
+  {% if min_price != max_price %}
+    <span class="price">de {{ min_price | money_format }}</span> <br >
+    <span class="price">até {{ max_price | money_format }}</span>
+  {% else %}
+    <span class="price">{{ max_price | money_format }}</span>
+  {% endif %}
